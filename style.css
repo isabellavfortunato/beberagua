@@ -21,7 +21,7 @@ html, body { margin: 0; padding: 0; }
   overflow: hidden;
   background: radial-gradient(120% 90% at 50% -10%, #0e4a8f 0%, var(--abyss) 60%, #03152e 100%);
   color: var(--mist);
-  font-family: 'Saira Semi Condensed', system-ui, sans-serif;
+  font-family: 'Archivo Narrow', system-ui, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -108,8 +108,8 @@ html, body { margin: 0; padding: 0; }
   margin-bottom: 2px;
 }
 .timer {
-  font-family: 'Saira Condensed', 'Saira Semi Condensed', sans-serif;
-  font-weight: 600;
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: 700;
   font-size: clamp(88px, 30vw, 148px);
   line-height: 0.9;
   font-variant-numeric: tabular-nums;
@@ -298,7 +298,7 @@ button:focus-visible { outline: 3px solid var(--surface); outline-offset: 3px; }
 .toast-snooze { width: 100%; margin-top: 10px; }
 
 .synccode {
-  font-family: 'Saira Condensed', sans-serif;
+  font-family: 'Archivo Narrow', sans-serif;
   font-size: 20px;
   letter-spacing: 0.04em;
   color: var(--surface);
@@ -364,7 +364,7 @@ button:focus-visible { outline: 3px solid var(--surface); outline-offset: 3px; }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 .toast-title {
-  font-family: 'Saira Condensed', sans-serif;
+  font-family: 'Archivo Narrow', sans-serif;
   font-size: 26px;
   font-weight: 600;
   margin-bottom: 3px;
