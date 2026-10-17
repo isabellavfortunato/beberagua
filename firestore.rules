@@ -1,0 +1,13 @@
+rules_version = "2";
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /reminders/{codigo} {
+      allow read, write: if request.auth != null && codigo.size() >= 12;
+
+      // Histórico de lembretes e de copos bebidos
+      match /eventos/{evento} {
+        allow read, write: if request.auth != null && codigo.size() >= 12;
+      }
+    }
+  }
+}

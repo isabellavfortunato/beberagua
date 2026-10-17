@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#072a33">
+  <title>Lembrete de água</title>
+  <meta name="description" content="Lembra você de beber água em intervalos que você escolhe.">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="aqua-root">
+    <div class="water-layer" id="water" style="height:0%">
+      <svg class="wave back" viewBox="0 0 1200 40" preserveAspectRatio="none">
+        <path d="M0 20 Q150 4 300 20 T600 20 T900 20 T1200 20 V40 H0 Z"></path>
+      </svg>
+      <svg class="wave front" viewBox="0 0 1200 40" preserveAspectRatio="none">
+        <path d="M0 22 Q150 38 300 22 T600 22 T900 22 T1200 22 V40 H0 Z"></path>
+      </svg>
+      <div class="water-body"></div>
+    </div>
+
+    <div class="overflow-flash" id="flash" hidden></div>
+
+    <div class="content">
+      <div class="topbar">
+        <div class="brand"><span class="drop"></span>Água</div>
+        <div class="today">hoje <b id="count">0</b> <span id="countLabel">lembretes</span></div>
+      </div>
+
+      <div class="stage">
+        <div class="eyebrow" id="eyebrow">pronta para começar</div>
+        <div class="timer" id="timer">40:00</div>
+        <div class="caption" id="caption">intervalo de <b>40 minutos</b></div>
+
+        <div class="controls">
+          <button class="btn-main" id="primary">Começar</button>
+          <button class="btn-ghost" id="reset">Zerar</button>
+        </div>
+
+        <div class="intake">
+          <div class="intake-buttons">
+            <button class="btn-intake" id="drink2">Bebi 2 goles</button>
+            <button class="btn-intake" id="drink4">Bebi 4 goles</button>
+          </div>
+          <div class="intake-total">hoje <b id="mlHoje">0</b> ml de água</div>
+        </div>
+      </div>
+
+      <div class="settings">
+        <button class="settings-head" id="toggleSettings" aria-expanded="false">
+          Ajustes do intervalo <span class="chev" id="chev">▾</span>
+        </button>
+        <div class="panel" id="panel" style="max-height:0;opacity:0">
+          <div class="panel-inner">
+            <div class="field-label">Escolha um intervalo</div>
+            <div class="presets" id="presets"></div>
+            <div class="custom-row">
+              <input type="number" id="custom" min="1" max="240" value="40" aria-label="Intervalo personalizado em minutos">
+              <span>minutos</span>
+              <button class="btn-apply" id="apply">Aplicar</button>
+            </div>
+
+            <div class="field-label" style="margin-top:4px">Avisar somente entre</div>
+            <div class="custom-row">
+              <input type="number" id="activeStart" min="0" max="23" value="8" aria-label="Hora inicial dos avisos">
+              <span>e</span>
+              <input type="number" id="activeEnd" min="0" max="23" value="22" aria-label="Hora final dos avisos">
+              <span>horas</span>
+            </div>
+
+            <div class="toggle-row">
+              <span>Som ao avisar</span>
+              <button class="switch on" id="soundSwitch" role="switch" aria-checked="true" aria-label="Som ao avisar">
+                <span class="knob"></span>
+              </button>
+            </div>
+            <div class="toggle-row" style="margin-top:12px">
+              <span>Testar o som</span>
+              <button class="btn-apply" id="testSound">Tocar ding</button>
+            </div>
+
+            <div class="field-label" style="margin-top:16px">Código de sincronização</div>
+            <div class="synccode" id="syncCurrent">nenhum código definido</div>
+            <div class="custom-row" style="margin-top:10px">
+              <input type="text" id="syncInput" placeholder="digite um código, mínimo 12 caracteres" aria-label="Código de sincronização" style="width:auto;flex:1;text-align:left;font-size:14px">
+              <button class="btn-apply" id="applySync">Usar</button>
+            </div>
+            <div class="permwarn" id="syncstatus" style="margin-top:8px" hidden></div>
+          </div>
+        </div>
+        <div class="permwarn" id="permwarn" hidden></div>
+        <div class="permwarn" id="pushstatus" hidden></div>
+      </div>
+
+      <div class="settings">
+        <button class="settings-head" id="toggleHistory" aria-expanded="false">
+          Histórico <span class="chev" id="chevHist">▾</span>
+        </button>
+        <div class="panel" id="histPanel" style="max-height:0;opacity:0">
+          <div class="panel-inner">
+            <div class="histsummary">Hoje: <b id="histLembretes">0</b> lembretes, <b id="histGoles">0</b> goles, <b id="histMl">0</b> ml</div>
+            <div class="histlist" id="histList"><div class="histempty">Ainda sem registros. Os lembretes e os copos aparecem aqui.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="alertdialog" aria-live="assertive" hidden>
+      <div class="toast-title">Hora de beber água</div>
+      <div class="toast-sub">Beba um copo agora. O próximo ciclo já começou.</div>
+      <div class="toast-actions">
+        <button class="btn-main" id="toastDrink2">2 goles</button>
+        <button class="btn-main" id="toastDrink4">4 goles</button>
+      </div>
+      <button class="btn-ghost toast-snooze" id="snooze">Adiar 5 min</button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
