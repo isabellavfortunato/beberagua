@@ -350,6 +350,19 @@ button:focus-visible { outline: 3px solid var(--surface); outline-offset: 3px; }
   padding: 0 4px;
 }
 
+.btn-perm {
+  display: block;
+  margin: 14px auto 0;
+  background: var(--surface);
+  color: #05284f;
+  font-weight: 700;
+  font-size: 19px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(20,120,201,0.4);
+  letter-spacing: 0.02em;
+}
+
 .toast {
   position: fixed;
   left: 50%;

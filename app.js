@@ -50,6 +50,7 @@
     soundSwitch: document.getElementById("soundSwitch"),
     testSound: document.getElementById("testSound"),
     permwarn: document.getElementById("permwarn"),
+    btnPermitir: document.getElementById("btnPermitir"),
     pushstatus: document.getElementById("pushstatus"),
     syncCurrent: document.getElementById("syncCurrent"),
     syncInput: document.getElementById("syncInput"),
@@ -177,15 +178,22 @@
   }
 
   function updatePermWarn() {
-    if (typeof Notification === "undefined") { el.permwarn.hidden = true; return; }
+    if (typeof Notification === "undefined") {
+      el.permwarn.hidden = true;
+      if (el.btnPermitir) el.btnPermitir.hidden = true;
+      return;
+    }
     if (Notification.permission === "denied") {
       el.permwarn.hidden = false;
       el.permwarn.textContent = "As notificações estão bloqueadas neste navegador. O aviso na tela e o som continuam funcionando com o aplicativo aberto. Para receber avisos com a tela bloqueada, libere a permissão nas configurações do site.";
+      if (el.btnPermitir) el.btnPermitir.hidden = true;
     } else if (Notification.permission === "default") {
       el.permwarn.hidden = false;
-      el.permwarn.textContent = "Ao começar, o navegador vai pedir permissão para enviar notificações. Autorize para receber os avisos com a tela bloqueada.";
+      el.permwarn.textContent = "Toque no botão abaixo para autorizar as notificações e receber os avisos com a tela bloqueada.";
+      if (el.btnPermitir) el.btnPermitir.hidden = false;
     } else {
       el.permwarn.hidden = true;
+      if (el.btnPermitir) el.btnPermitir.hidden = true;
     }
   }
   function setPushStatus(msg) {
@@ -424,6 +432,7 @@
 
   // Ações (em modo remoto, gravam no Firestore e voltam pelo onSnapshot)
   function start() {
+    if (remote) habilitarPush();
     ensureAudio();
     requestWakeLock();
     var novo = Date.now() + (pausedRemainingMs != null ? pausedRemainingMs : intervalMin * 60000);
@@ -433,7 +442,6 @@
     dueKey = null;
     render();
     if (remote) {
-      habilitarPush();
       gravar({
         enabled: true,
         nextFireAt: firebase.firestore.Timestamp.fromMillis(novo),
@@ -566,6 +574,9 @@
   });
 
   el.primary.addEventListener("click", function () { if (running) pause(); else start(); });
+  if (el.btnPermitir) el.btnPermitir.addEventListener("click", function () {
+    habilitarPush().then(function () { updatePermWarn(); });
+  });
   el.reset.addEventListener("click", reset);
   el.custom.addEventListener("keydown", function (e) { if (e.key === "Enter") applyInterval(el.custom.value || intervalMin); });
   el.custom.addEventListener("change", function () { applyInterval(el.custom.value || intervalMin); });
