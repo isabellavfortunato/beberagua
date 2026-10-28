@@ -178,23 +178,9 @@
   }
 
   function updatePermWarn() {
-    if (typeof Notification === "undefined") {
-      el.permwarn.hidden = true;
-      if (el.btnPermitir) el.btnPermitir.hidden = true;
-      return;
-    }
-    if (Notification.permission === "denied") {
-      el.permwarn.hidden = false;
-      el.permwarn.textContent = "As notificações estão bloqueadas neste navegador. O aviso na tela e o som continuam funcionando com o aplicativo aberto. Para receber avisos com a tela bloqueada, libere a permissão nas configurações do site.";
-      if (el.btnPermitir) el.btnPermitir.hidden = true;
-    } else if (Notification.permission === "default") {
-      el.permwarn.hidden = false;
-      el.permwarn.textContent = "Toque no botão abaixo para autorizar as notificações e receber os avisos com a tela bloqueada.";
-      if (el.btnPermitir) el.btnPermitir.hidden = false;
-    } else {
-      el.permwarn.hidden = true;
-      if (el.btnPermitir) el.btnPermitir.hidden = true;
-    }
+    if (el.btnPermitir) el.btnPermitir.hidden = true;
+    el.permwarn.hidden = false;
+    el.permwarn.textContent = "O aviso toca e aparece na tela enquanto o aplicativo está aberto.";
   }
   function setPushStatus(msg) {
     if (!msg) { el.pushstatus.hidden = true; return; }
@@ -342,7 +328,6 @@
     try {
       firebase.initializeApp(self.FIREBASE_CONFIG);
       fb.db = firebase.firestore();
-      fb.messaging = firebase.messaging();
       firebase.auth().signInAnonymously().catch(function () {});
       firebase.auth().onAuthStateChanged(function (user) {
         if (!user) return;
@@ -351,67 +336,21 @@
         remote = true;
         if (syncCode) {
           assinar();
-          registrarToken();
           setSyncStatus("Sincronizado por código. Use o mesmo código nos outros aparelhos.");
         } else {
           setSyncStatus("Defina um código de sincronização abaixo. Use o mesmo em cada aparelho.");
         }
       });
-      // avisos em primeiro plano, quando o servidor dispara e a aba está aberta
-      // O ding e o aviso na tela já vêm do cruzamento do zero, com o app aberto.
-      // Aqui não repetimos, para não tocar duas vezes.
-      if (fb.messaging && fb.messaging.onMessage) {
-        fb.messaging.onMessage(function () {});
-      }
     } catch (e) {
       setSyncStatus("Não foi possível iniciar a sincronização agora.");
     }
   }
 
-  // Registra o token deste aparelho sem pedir permissão de novo (quando já concedida)
-  function registrarToken() {
-    if (!remote || !fb.messaging) return;
-    if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
-    if (!("serviceWorker" in navigator)) return;
-    navigator.serviceWorker.register("firebase-messaging-sw.js").then(function (reg) {
-      return fb.messaging.getToken({ vapidKey: self.FIREBASE_VAPID_KEY, serviceWorkerRegistration: reg });
-    }).then(function (token) {
-      if (token) {
-        fb.token = token;
-        setPushStatus("Avisos com a tela bloqueada ligados neste aparelho.");
-        gravar({ tokens: firebase.firestore.FieldValue.arrayUnion(token), tzOffset: tzOffsetMin() });
-      }
-    }).catch(function () {});
-  }
-
   function habilitarPush() {
-    if (!remote) return Promise.resolve(false);
-    if (typeof Notification === "undefined" || !("serviceWorker" in navigator)) return Promise.resolve(false);
-    return Notification.requestPermission().then(function (perm) {
-      updatePermWarn();
-      if (perm !== "granted") { setPushStatus("Sem permissão, os avisos só chegam com o aplicativo aberto."); return false; }
-      return navigator.serviceWorker.register("firebase-messaging-sw.js").then(function (reg) {
-        if (!fb.messaging) return false;
-        return fb.messaging.getToken({
-          vapidKey: self.FIREBASE_VAPID_KEY, serviceWorkerRegistration: reg
-        }).then(function (token) {
-          if (token) {
-            fb.token = token;
-            setPushStatus("Avisos com a tela bloqueada ligados neste aparelho.");
-            gravar({ tokens: firebase.firestore.FieldValue.arrayUnion(token), tzOffset: tzOffsetMin() });
-            return true;
-          }
-          setPushStatus("Não foi possível registrar este aparelho para avisos.");
-          return false;
-        });
-      });
-    }).catch(function () {
-      setPushStatus("Não foi possível ligar os avisos com a tela bloqueada agora.");
-      return false;
-    });
+    return Promise.resolve(false);
   }
 
-  // Laço de exibição, sem gravar nada. Só mostra e toca o ding no cruzamento do zero.
+  // Laço do aplicativo. No cruzamento do zero, avisa, registra e reinicia o intervalo.
   function tick() {
     if (running && endTime && Date.now() >= endTime) {
       if (dueKey !== endTime) {
@@ -419,11 +358,15 @@
         if (soundOn) playDing();
         showToast();
         flash();
-        if (!remote) {
-          notificacaoLocal();
+        notificacaoLocal();
+        endTime = Date.now() + intervalMin * 60000;
+        var ref = docRef();
+        if (remote && ref) {
+          try { ref.collection("eventos").add({ tipo: "lembrete", at: firebase.firestore.FieldValue.serverTimestamp() }); } catch (e) {}
+          gravar({ nextFireAt: firebase.firestore.Timestamp.fromMillis(endTime) });
+        } else {
           countToday += 1;
           save();
-          endTime = Date.now() + intervalMin * 60000;
         }
       }
     }
@@ -432,7 +375,6 @@
 
   // Ações (em modo remoto, gravam no Firestore e voltam pelo onSnapshot)
   function start() {
-    if (remote) habilitarPush();
     ensureAudio();
     requestWakeLock();
     var novo = Date.now() + (pausedRemainingMs != null ? pausedRemainingMs : intervalMin * 60000);
@@ -522,8 +464,7 @@
     setSyncStatus("Ligado a este código. Os aparelhos com o mesmo código ficam espelhados.");
     if (remote) {
       assinar();
-      registrarToken();
-      if (fb.token) gravar({ tokens: firebase.firestore.FieldValue.arrayUnion(fb.token), tzOffset: tzOffsetMin() });
+      gravar({ tzOffset: tzOffsetMin() });
     }
   }
 
@@ -574,9 +515,6 @@
   });
 
   el.primary.addEventListener("click", function () { if (running) pause(); else start(); });
-  if (el.btnPermitir) el.btnPermitir.addEventListener("click", function () {
-    habilitarPush().then(function () { updatePermWarn(); });
-  });
   el.reset.addEventListener("click", reset);
   el.custom.addEventListener("keydown", function (e) { if (e.key === "Enter") applyInterval(el.custom.value || intervalMin); });
   el.custom.addEventListener("change", function () { applyInterval(el.custom.value || intervalMin); });
