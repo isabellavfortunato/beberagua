@@ -12,7 +12,7 @@
   var settingsOpen = false;
   var activeStart = 8;
   var activeEnd = 22;
-  var GOLES = { 0.5: 100, 2: 400, 4: 800 };
+  var GOLES = { 0.5: 100, 2: 400 };
   var localMlHoje = 0;
   var localMlDia = null;
 
@@ -65,12 +65,10 @@
     histMl: document.getElementById("histMl"),
     drinkHalf: document.getElementById("drinkHalf"),
     drink2: document.getElementById("drink2"),
-    drink4: document.getElementById("drink4"),
     mlHoje: document.getElementById("mlHoje"),
     toast: document.getElementById("toast"),
     toastDrinkHalf: document.getElementById("toastDrinkHalf"),
     toastDrink2: document.getElementById("toastDrink2"),
-    toastDrink4: document.getElementById("toastDrink4"),
     snooze: document.getElementById("snooze")
   };
 
@@ -529,7 +527,6 @@
   el.activeEnd.addEventListener("change", applyActiveHours);
   el.drinkHalf.addEventListener("click", function () { registrarCopo(0.5); });
   el.drink2.addEventListener("click", function () { registrarCopo(2); });
-  el.drink4.addEventListener("click", function () { registrarCopo(4); });
   el.soundSwitch.addEventListener("click", function () { soundOn = !soundOn; save(); render(); });
   el.testSound.addEventListener("click", function () { ensureAudio(); playDing(); });
   el.applySync.addEventListener("click", function () { usarCodigo(el.syncInput.value); });
@@ -553,7 +550,6 @@
   });
   el.toastDrinkHalf.addEventListener("click", function () { registrarCopo(0.5); hideToast(); });
   el.toastDrink2.addEventListener("click", function () { registrarCopo(2); hideToast(); });
-  el.toastDrink4.addEventListener("click", function () { registrarCopo(4); hideToast(); });
   el.snooze.addEventListener("click", snooze);
 
   // Início
