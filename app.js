@@ -12,7 +12,7 @@
   var settingsOpen = false;
   var activeStart = 8;
   var activeEnd = 22;
-  var GOLES = { 2: 75, 4: 150 };
+  var GOLES = { 0.5: 100, 2: 400, 4: 800 };
   var localMlHoje = 0;
   var localMlDia = null;
 
@@ -63,10 +63,12 @@
     histGoles: document.getElementById("histGoles"),
     histList: document.getElementById("histList"),
     histMl: document.getElementById("histMl"),
+    drinkHalf: document.getElementById("drinkHalf"),
     drink2: document.getElementById("drink2"),
     drink4: document.getElementById("drink4"),
     mlHoje: document.getElementById("mlHoje"),
     toast: document.getElementById("toast"),
+    toastDrinkHalf: document.getElementById("toastDrinkHalf"),
     toastDrink2: document.getElementById("toastDrink2"),
     toastDrink4: document.getElementById("toastDrink4"),
     snooze: document.getElementById("snooze")
@@ -271,7 +273,12 @@
       var dia = dt.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
       var texto;
       if (e.tipo === "bebi") {
-        texto = (e.goles != null ? e.goles + " goles" : "Água") + (e.ml != null ? " (" + e.ml + " ml)" : "");
+        var rotuloGole;
+        if (e.goles == null) rotuloGole = "Água";
+        else if (Number(e.goles) === 0.5) rotuloGole = "Meio gole";
+        else if (Number(e.goles) === 1) rotuloGole = "1 gole";
+        else rotuloGole = e.goles + " goles";
+        texto = rotuloGole + (e.ml != null ? " (" + e.ml + " ml)" : "");
       } else {
         texto = "Lembrete";
       }
@@ -520,6 +527,7 @@
   el.custom.addEventListener("change", function () { applyInterval(el.custom.value || intervalMin); });
   el.activeStart.addEventListener("change", applyActiveHours);
   el.activeEnd.addEventListener("change", applyActiveHours);
+  el.drinkHalf.addEventListener("click", function () { registrarCopo(0.5); });
   el.drink2.addEventListener("click", function () { registrarCopo(2); });
   el.drink4.addEventListener("click", function () { registrarCopo(4); });
   el.soundSwitch.addEventListener("click", function () { soundOn = !soundOn; save(); render(); });
@@ -543,6 +551,7 @@
     el.histPanel.style.maxHeight = historicoOpen ? "360px" : "0";
     el.histPanel.style.opacity = historicoOpen ? "1" : "0";
   });
+  el.toastDrinkHalf.addEventListener("click", function () { registrarCopo(0.5); hideToast(); });
   el.toastDrink2.addEventListener("click", function () { registrarCopo(2); hideToast(); });
   el.toastDrink4.addEventListener("click", function () { registrarCopo(4); hideToast(); });
   el.snooze.addEventListener("click", snooze);

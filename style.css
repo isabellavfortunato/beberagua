@@ -282,6 +282,7 @@ button:focus-visible { outline: 3px solid var(--surface); outline-offset: 3px; }
 }
 .intake-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
